@@ -31,6 +31,6 @@ app.use('/api', eventRoutes);
 app.use('/api/festivals', festivalRoutes);
 
 
-app.use('/home', (req, res)=>{
+app.get('/home', (req, res)=>{
     res.send('<h1>Hello Radha-Krishna')
 })
