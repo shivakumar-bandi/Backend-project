@@ -7,7 +7,7 @@ const { upload } = require('../controllers/articleController');
 
 
 // POST /events - Create a new event
-router.post('/festival', upload.single('image'), eventController.createEvent); // Added middleware for file handling
+router.post('/festival', upload.single('image'), festivalController.createFestival); // Added middleware for file handling
 
 // Create a new festival
 router.post('/', festivalController.createFestival);
