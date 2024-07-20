@@ -2,8 +2,23 @@
 
 const Festival = require('../models/Festival');
 const authMiddleware = require('../middleware/authMiddleware');
+const multer = require('multer');
+const path = require('path');
+
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + path.extname(file.originalname));
+    }
+  });
+  
+  const upload = multer({ storage: storage });
 exports.createFestival = async (req, res) => {
     try {
+        console.log('Uploaded file:', req.file);
         console.log(req.body); // Add this line to inspect req.body
         const { title, description, date, location, image } = req.body;
         const newFestival = new Festival({

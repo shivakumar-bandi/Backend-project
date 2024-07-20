@@ -2,10 +2,24 @@
 
 const Event = require('../models/Event');
 const authMiddleware = require('../middleware/authMiddleware');
+const multer = require('multer');
+const path = require('path');
 
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
 // Create a new event
 exports.createEvent = async (req, res) => {
   try {
+    console.log('Uploaded file:', req.file);
     const { title, description, date, location, image } = req.body;
     const newEvent = new Event({ title, description, date, location, image });
     const savedEvent = await newEvent.save();

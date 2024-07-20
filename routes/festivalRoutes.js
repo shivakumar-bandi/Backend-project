@@ -4,6 +4,12 @@ const express = require('express');
 const router = express.Router();
 const festivalController = require('../controllers/festivalController');
 
+
+const upload = require('../middleware/uploadMiddleware');
+
+// POST /events - Create a new event
+router.post('/events', upload.single('image'), eventController.createEvent); // Added middleware for file handling
+
 // Create a new festival
 router.post('/', festivalController.createFestival);
 
