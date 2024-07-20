@@ -16,6 +16,7 @@ const upload = multer({ storage: storage });
 
 const createArticle = async (req, res) => {
   try {
+    console.log('Uploaded file:', req.file);
     const { title, content, author } = req.body;
     const image = req.file ? req.file.filename : '';
 
