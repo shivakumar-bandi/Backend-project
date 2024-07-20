@@ -5,7 +5,7 @@ const dotenv =require('dotenv')
 
 dotenv.config();
 
-const secretKey = process.env.JWT_SECRET;
+const secretKey = process.env.WhatIsYourName;
 
 
 const userRegister = async(req, res)=>{
