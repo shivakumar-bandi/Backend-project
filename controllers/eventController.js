@@ -1,7 +1,4 @@
-// controllers/eventController.js
-
 const Event = require('../models/Event');
-const authMiddleware = require('../middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
 
@@ -16,13 +13,21 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
+// Middleware to handle file upload
+exports.uploadMiddleware = upload.single('image');
+
 // Create a new event
 exports.createEvent = async (req, res) => {
   try {
     console.log('Uploaded file:', req.file);
-    const { title, description, date, location, image } = req.body;
+    const { title, description, date, location } = req.body;
+    const image = req.file ? req.file.filename : '';
+
     const newEvent = new Event({ title, description, date, location, image });
+
     const savedEvent = await newEvent.save();
+
     res.status(201).json(savedEvent);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -55,15 +60,19 @@ exports.getEventById = async (req, res) => {
 // Update an event by ID
 exports.updateEvent = async (req, res) => {
   try {
-    const { title, description, date, location, image } = req.body;
+    const { title, description, date, location } = req.body;
+    const image = req.file ? req.file.filename : req.body.image;
+
     const updatedEvent = await Event.findByIdAndUpdate(
       req.params.id,
       { title, description, date, location, image },
       { new: true }
     );
+
     if (!updatedEvent) {
       return res.status(404).json({ error: 'Event not found' });
     }
+
     res.status(200).json(updatedEvent);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -82,5 +91,3 @@ exports.deleteEvent = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-
