@@ -1,6 +1,7 @@
 const Event = require('../models/Event');
 const multer = require('multer');
 const path = require('path');
+const authMiddleware = require('../middleware/authMiddleware');
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -13,22 +14,18 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
-// Middleware to handle file upload
-exports.uploadMiddleware = upload.single('image');
-
 // Create a new event
 exports.createEvent = async (req, res) => {
   try {
     console.log('Uploaded file:', req.file);
-    const { title, description, date, location } = req.body;
-    const image = req.file ? req.file.filename : '';
+    console.log(req.body); 
+    const { title, description, date, location, image } = req.body;
 
     const newEvent = new Event({ title, description, date, location, image });
 
-    const savedEvent = await newEvent.save();
+  await newEvent.save();
 
-    res.status(201).json(savedEvent);
+    res.status(201).json(newEvent);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
