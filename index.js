@@ -30,9 +30,10 @@ app.get('/', (req, res) => {
 // Define other routes
 app.use('/user', userRoutes);
 app.use('/uploads', express.static('uploads'));
-app.use('/api', articleRoutes);
-app.use('/api', eventRoutes);
-app.use('/api', festivalRoutes);
+app.use('/api/articles', articleRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/festivals', festivalRoutes);
+
 
 // Catch-all route for unknown paths
 app.use((req, res, next) => {
