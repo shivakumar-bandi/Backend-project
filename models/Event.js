@@ -21,7 +21,7 @@ const eventSchema = new mongoose.Schema({
   },
   image: {
     type: String,  // Assuming storing image URL for simplicity
-    required: true
+   
   }
 });
 
