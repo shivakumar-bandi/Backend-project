@@ -32,7 +32,7 @@ app.use('/user', userRoutes);
 app.use('/uploads', express.static('uploads'));
 app.use('/api', articleRoutes);
 app.use('/api', eventRoutes);
-app.use('/api/festivals', festivalRoutes);
+app.use('/api', festivalRoutes);
 
 // Catch-all route for unknown paths
 app.use((req, res, next) => {
