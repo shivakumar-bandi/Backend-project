@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const eventController = require('../controllers/eventController');
 const upload = require('../middleware/uploadMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
 
 // POST /events - Create a new event
