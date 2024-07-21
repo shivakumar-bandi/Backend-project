@@ -19,8 +19,8 @@ exports.createEvent = async (req, res) => {
   try {
     console.log('Uploaded file:', req.file);
     console.log(req.body); 
-    const { title, description, date, location, image } = req.body;
-
+    const { title, description, date, location } = req.body;
+    const image = req.file ? req.file.filename : ''; 
     const newEvent = new Event({ title, description, date, location, image });
 
   await newEvent.save();
