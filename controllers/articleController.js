@@ -15,9 +15,15 @@ const upload = multer({ storage: storage });
 
 const createArticle = async (req, res) => {
   try {
-    const { title, content, author } = req.body;
-    const image = req.file ? req.file.filename : '';
+    console.log('Request Body:', req.body);
+    console.log('Uploaded File:', req.file);
 
+    const { title, content, author } = req.body;
+    if (!title || !content || !author) {
+      return res.status(400).json({ error: 'Title, content, and author are required.' });
+    }
+
+    const image = req.file ? req.file.filename : '';
     const newArticle = new Article({ title, content, author, image });
     await newArticle.save();
     res.status(201).json({ message: 'Article created successfully', article: newArticle });
@@ -25,6 +31,7 @@ const createArticle = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 const updateArticle = async (req, res) => {
   try {
@@ -35,10 +42,18 @@ const updateArticle = async (req, res) => {
     const updatedFields = { title, content, author };
     if (image) updatedFields.image = image;
 
-    const updatedArticle = await Article.findByIdAndUpdate(id, updatedFields, { new: true });
-    if (!updatedArticle) {
+    const oldArticle = await Article.findById(id);
+    if (!oldArticle) {
       return res.status(404).json({ message: 'Article not found' });
     }
+
+    if (oldArticle.image && image) {
+      fs.unlink(path.join('uploads', oldArticle.image), err => {
+        if (err) console.error('Error deleting old image:', err);
+      });
+    }
+
+    const updatedArticle = await Article.findByIdAndUpdate(id, updatedFields, { new: true });
     res.status(200).json({ message: 'Article updated successfully', article: updatedArticle });
   } catch (err) {
     res.status(500).json({ error: err.message });
