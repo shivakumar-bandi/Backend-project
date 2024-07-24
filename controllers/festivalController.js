@@ -45,6 +45,7 @@ exports.createFestival = async (req, res) => {
     }
 };
 
+
 // Get all festivals
 exports.getAllFestivals = async (req, res) => {
     try {
