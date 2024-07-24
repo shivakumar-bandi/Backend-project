@@ -1,32 +1,31 @@
-// controllers/festivalController.js
-
 const Festival = require('../models/Festival');
-const authMiddleware = require('../middleware/authMiddleware');
 const multer = require('multer');
 const path = require('path');
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'uploads/');
+        cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
-      cb(null, Date.now() + path.extname(file.originalname));
+        cb(null, Date.now() + path.extname(file.originalname));
     }
-  });
-  
-  const upload = multer({ storage: storage });
+});
+
+const upload = multer({ storage: storage });
+
 exports.createFestival = async (req, res) => {
     try {
         console.log('Uploaded file:', req.file);
-        console.log(req.body); // Add this line to inspect req.body
-        const { title, description, date, location, image } = req.body;
+        console.log(req.body); // Inspect req.body to ensure it contains the expected fields
+
+        const { title, description, date, location } = req.body;
         const newFestival = new Festival({
             title,
             description,
             date,
             location,
-            image,
+            image: req.file.filename // Use req.file.filename to save the file name
         });
         await newFestival.save();
         res.status(201).json(newFestival);
@@ -61,12 +60,24 @@ exports.getFestivalById = async (req, res) => {
 // Update festival by ID
 exports.updateFestival = async (req, res) => {
     try {
-        const { title, description, date, location, image } = req.body;
+        const { title, description, date, location } = req.body;
+        const updateData = {
+            title,
+            description,
+            date,
+            location
+        };
+
+        if (req.file) {
+            updateData.image = req.file.filename; // Update the image if a new file is uploaded
+        }
+
         const updatedFestival = await Festival.findByIdAndUpdate(
             req.params.id,
-            { title, description, date, location, image },
+            updateData,
             { new: true }
         );
+
         if (!updatedFestival) {
             return res.status(404).json({ error: 'Festival not found' });
         }
