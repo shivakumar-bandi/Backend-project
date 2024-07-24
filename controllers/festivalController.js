@@ -17,7 +17,7 @@ const upload = multer({ storage: storage });
 exports.createFestival = async (req, res) => {
     try {
         console.log('Uploaded file:', req.file);
-        console.log(req.body); // Inspect req.body to ensure it contains the expected fields
+        console.log(req.body); // Add this line to inspect req.body
 
         const { title, description, date, location } = req.body;
         const newFestival = new Festival({
@@ -25,7 +25,7 @@ exports.createFestival = async (req, res) => {
             description,
             date,
             location,
-            image: req.file.filename // Use req.file.filename to save the file name
+            image: req.file ? req.file.filename : null // Use req.file.filename to save the file name
         });
         await newFestival.save();
         res.status(201).json(newFestival);
