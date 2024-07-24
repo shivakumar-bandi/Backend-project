@@ -72,6 +72,9 @@ exports.getFestivalById = async (req, res) => {
 // Update festival by ID
 exports.updateFestival = async (req, res) => {
     try {
+        console.log('Uploaded file:', req.file); // Add this line to debug
+        console.log(req.body); 
+        
         const { title, description, date, location } = req.body;
         const updateData = {
             title,
