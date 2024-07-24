@@ -17,16 +17,27 @@ const upload = multer({ storage: storage });
 exports.createFestival = async (req, res) => {
     try {
         console.log('Uploaded file:', req.file);
-        console.log(req.body); // Add this line to inspect req.body
+        console.log('Request body:', req.body);
 
         const { title, description, date, location } = req.body;
+
+        if (!description) {
+            return res.status(400).json({ error: 'Description is required' });
+        }
+
+        const parsedDate = new Date(date);
+        if (isNaN(parsedDate)) {
+            return res.status(400).json({ error: 'Invalid date format' });
+        }
+
         const newFestival = new Festival({
             title,
             description,
-            date,
+            date: parsedDate,
             location,
-            image: req.file ? req.file.filename : null // Use req.file.filename to save the file name
+            image: req.file ? req.file.filename : null
         });
+
         await newFestival.save();
         res.status(201).json(newFestival);
     } catch (err) {
