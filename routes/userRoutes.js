@@ -1,12 +1,16 @@
+const express = require('express');
+const userController = require('../controllers/userController');
+const authMiddleware = require('../middleware/authMiddleware'); // Adjust path as needed
 
-const userController =require('../controllers/userController')
+const router = express.Router();
 
-const express = require('express')
+// Route to get the current user, protected by authMiddleware
+router.get('/current_user', authMiddleware, userController.getCurrentUser);
 
-  const router = express.Router();
+// Route to register a new user
+router.post('/register', userController.userRegister);
 
-  router.post('/register', userController.userRegister)
-router.post('/login', userController.userLogin)
+// Route to log in a user
+router.post('/login', userController.userLogin);
 
-
-  module.exports = router;
+module.exports = router;
