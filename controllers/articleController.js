@@ -1,6 +1,7 @@
 const Article = require('../models/Article');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs'); // Import fs
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -32,7 +33,6 @@ const createArticle = async (req, res) => {
   }
 };
 
-
 const updateArticle = async (req, res) => {
   try {
     const { id } = req.params;
@@ -47,7 +47,7 @@ const updateArticle = async (req, res) => {
       return res.status(404).json({ message: 'Article not found' });
     }
 
-    if (oldArticle.image && image) {
+    if (oldArticle.image && fs.existsSync(path.join('uploads', oldArticle.image)) && image) {
       fs.unlink(path.join('uploads', oldArticle.image), err => {
         if (err) console.error('Error deleting old image:', err);
       });
@@ -66,6 +66,14 @@ const deleteArticle = async (req, res) => {
     const deletedArticle = await Article.findByIdAndDelete(id);
     if (!deletedArticle) {
       return res.status(404).json({ message: 'Article not found' });
+    }
+    if (deletedArticle.image) {
+      const imagePath = path.join('uploads', deletedArticle.image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlink(imagePath, err => {
+          if (err) console.error('Error deleting image:', err);
+        });
+      }
     }
     res.status(200).json({ message: 'Article deleted successfully' });
   } catch (err) {
