@@ -27,18 +27,6 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello Radha-Krishna</h1>');
 });
 
-// Define the /api/current_user route
-const currentUser = {
-    id: 1,
-    name: 'John Doe',
-    email: 'john.doe@example.com'
-  };
-  
-  app.get('/api/current_user', (req, res) => {
-    res.status(200).json(currentUser);
-  });
-  
-
 // Define other routes
 app.use('/user', userRoutes);
 app.use('/uploads', express.static('uploads'));
