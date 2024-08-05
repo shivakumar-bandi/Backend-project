@@ -1,19 +1,6 @@
 const Article = require('../models/Article');
-const multer = require('multer');
-const path = require('path');
 const fs = require('fs');
-
-// Configure storage for multer
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage });
+const path = require('path');
 
 const createArticle = async (req, res) => {
   try {
@@ -109,4 +96,4 @@ const getAllArticles = async (req, res) => {
   }
 };
 
-module.exports = { upload, createArticle, updateArticle, deleteArticle, getArticle, getAllArticles };
+module.exports = { createArticle, updateArticle, deleteArticle, getArticle, getAllArticles };
