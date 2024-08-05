@@ -1,8 +1,9 @@
 const Article = require('../models/Article');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs'); // Import fs
+const fs = require('fs');
 
+// Configure storage for multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
@@ -29,7 +30,8 @@ const createArticle = async (req, res) => {
     await newArticle.save();
     res.status(201).json({ message: 'Article created successfully', article: newArticle });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error creating article:', err);
+    res.status(500).json({ error: 'Internal Server Error: ' + err.message });
   }
 };
 
@@ -56,7 +58,8 @@ const updateArticle = async (req, res) => {
     const updatedArticle = await Article.findByIdAndUpdate(id, updatedFields, { new: true });
     res.status(200).json({ message: 'Article updated successfully', article: updatedArticle });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error updating article:', err);
+    res.status(500).json({ error: 'Internal Server Error: ' + err.message });
   }
 };
 
@@ -77,7 +80,8 @@ const deleteArticle = async (req, res) => {
     }
     res.status(200).json({ message: 'Article deleted successfully' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error deleting article:', err);
+    res.status(500).json({ error: 'Internal Server Error: ' + err.message });
   }
 };
 
@@ -90,7 +94,8 @@ const getArticle = async (req, res) => {
     }
     res.status(200).json(article);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error fetching article:', err);
+    res.status(500).json({ error: 'Internal Server Error: ' + err.message });
   }
 };
 
@@ -99,7 +104,8 @@ const getAllArticles = async (req, res) => {
     const articles = await Article.find();
     res.status(200).json(articles);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error fetching articles:', err);
+    res.status(500).json({ error: 'Internal Server Error: ' + err.message });
   }
 };
 
