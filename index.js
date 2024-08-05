@@ -6,6 +6,7 @@ const cors = require('cors');
 const articleRoutes = require('./routes/articleRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const festivalRoutes = require('./routes/festivalRoutes');
+const path = require('path'); 
 
 dotenv.config();
 connectDB();
