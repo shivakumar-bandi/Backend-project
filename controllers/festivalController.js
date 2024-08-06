@@ -29,6 +29,7 @@ exports.createFestival = async (req, res) => {
     await newFestival.save();
     res.status(201).json(newFestival);
   } catch (err) {
+    console.error('Error creating festival:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -38,6 +39,7 @@ exports.getAllFestivals = async (req, res) => {
     const festivals = await Festival.find();
     res.json(festivals);
   } catch (err) {
+    console.error('Error fetching festivals:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -50,6 +52,7 @@ exports.getFestivalById = async (req, res) => {
     }
     res.json(festival);
   } catch (err) {
+    console.error('Error fetching festival:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -57,8 +60,8 @@ exports.getFestivalById = async (req, res) => {
 exports.updateFestival = async (req, res) => {
   try {
     console.log('Uploaded file:', req.file);
-    console.log(req.body); 
-    
+    console.log('Request body:', req.body);
+
     const { title, description, date, location } = req.body;
     const updateData = {
       title,
@@ -82,6 +85,7 @@ exports.updateFestival = async (req, res) => {
     }
     res.json(updatedFestival);
   } catch (err) {
+    console.error('Error updating festival:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -94,6 +98,7 @@ exports.deleteFestival = async (req, res) => {
     }
     res.json({ message: 'Festival deleted successfully' });
   } catch (err) {
+    console.error('Error deleting festival:', err);
     res.status(500).json({ error: err.message });
   }
 };
