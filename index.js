@@ -26,6 +26,22 @@ app.use('/api/events', eventRoutes);
 app.use('/api/festivals', festivalRoutes);
 
 app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+
+app.get('/test', (req, res) => {
+  res.send('Server is working!');
+});
+
+
+app.use((req, res, next) => {
   res.status(404).send('Cannot GET ' + req.originalUrl);
 });
 
