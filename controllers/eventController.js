@@ -1,20 +1,7 @@
 const Event = require('../models/Event');
-const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
-const authMiddleware = require('../middleware/authMiddleware');
 
-// Set up multer for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage });
-// Create a new event
 exports.createEvent = async (req, res) => {
   try {
     console.log('Uploaded file:', req.file);
@@ -23,15 +10,13 @@ exports.createEvent = async (req, res) => {
     const image = req.file ? req.file.filename : ''; 
     const newEvent = new Event({ title, description, date, location, image });
 
-  await newEvent.save();
-
+    await newEvent.save();
     res.status(201).json(newEvent);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Fetch all events
 exports.getAllEvents = async (req, res) => {
   try {
     const events = await Event.find();
@@ -41,7 +26,6 @@ exports.getAllEvents = async (req, res) => {
   }
 };
 
-// Fetch a single event by ID
 exports.getEventById = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -54,7 +38,6 @@ exports.getEventById = async (req, res) => {
   }
 };
 
-// Update an event by ID
 exports.updateEvent = async (req, res) => {
   try {
     const { title, description, date, location } = req.body;
@@ -76,7 +59,6 @@ exports.updateEvent = async (req, res) => {
   }
 };
 
-// Delete an event by ID
 exports.deleteEvent = async (req, res) => {
   try {
     const deletedEvent = await Event.findByIdAndDelete(req.params.id);

@@ -9,12 +9,9 @@ const articleRoutes = require('./routes/articleRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const festivalRoutes = require('./routes/festivalRoutes');
 
-delete require.cache[require.resolve('./models/Festival')];
-
 const app = express();
 
 dotenv.config();
-
 connectDB();
 
 const PORT = process.env.PORT || 5000;
@@ -33,7 +30,6 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/articles', articleRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/festivals', festivalRoutes);
-
 
 // Catch-all route for unknown paths
 app.use((req, res, next) => {
