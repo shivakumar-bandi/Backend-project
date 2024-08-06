@@ -11,9 +11,11 @@ if (!fs.existsSync(uploadDir)) {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    console.log('Saving file to:', uploadDir);
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
+    console.log('Generated filename:', filename);
     cb(null, Date.now() + path.extname(file.originalname)); // Append file extension
   }
 });
