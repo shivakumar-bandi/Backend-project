@@ -1,22 +1,31 @@
 const express = require('express');
-const router = express.Router();
-const { createArticle, updateArticle, deleteArticle, getArticle, getAllArticles } = require('../controllers/articleController');
-const upload = require('../middleware/uploadMiddleware');
+const multer = require('multer');
+const path = require('path');
+const {
+  createArticle,
+  getArticles,
+  getArticleById,
+  updateArticle,
+  deleteArticle,
+} = require('../controllers/articleController');
 
-// Route for creating an article
-router.post('/', upload.single('image'), (req, res) => {
-    console.log('Request Body:', req.body);
-    console.log('Uploaded File:', req.file);
-    createArticle(req, res);
-  });
-  
-  router.put('/:id', upload.single('image'), (req, res) => {
-    console.log('Request Body:', req.body);
-    console.log('Uploaded File:', req.file);
-    updateArticle(req, res);
-  });
+const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
+
+router.post('/', upload.single('image'), createArticle);
+router.get('/', getArticles);
+router.get('/:id', getArticleById);
+router.put('/:id', upload.single('image'), updateArticle);
 router.delete('/:id', deleteArticle);
-router.get('/:id', getArticle);
-router.get('/', getAllArticles);
 
 module.exports = router;
