@@ -8,6 +8,7 @@ const cors = require('cors');
 const articleRoutes = require('./routes/articleRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const festivalRoutes = require('./routes/festivalRoutes');
+const path = require('path');
 
 const app = express();
 
@@ -26,7 +27,8 @@ app.get('/', (req, res) => {
 
 // Define other routes
 app.use('/user', userRoutes);
-app.use('/uploads', express.static('uploads'));
+// Serve static files from the "uploads" directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/articles', articleRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/festivals', festivalRoutes);
