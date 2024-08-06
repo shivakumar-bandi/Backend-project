@@ -11,7 +11,7 @@ const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const uploadMiddleware =require('./middleware/uploadMiddleware')
+
 
 dotenv.config();
 connectDB();
