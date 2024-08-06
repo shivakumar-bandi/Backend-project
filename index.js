@@ -25,9 +25,12 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(uploadDir));
+
 // Define the root path route
 app.get('/', (req, res) => {
-    res.send('<h1>Hello Radha-Krishna</h1>');
+  res.send('<h1>Hello Radha-Krishna</h1>');
 });
 
 // Define other routes
@@ -35,13 +38,12 @@ app.use('/user', userRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/festivals', festivalRoutes);
-app.use('/uploads', express.static(uploadDir));
 
 // Catch-all route for unknown paths
 app.use((req, res, next) => {
-    res.status(404).send('Cannot GET ' + req.originalUrl);
+  res.status(404).send('Cannot GET ' + req.originalUrl);
 });
 
 app.listen(PORT, () => {
-    console.log(`Server started and running at ${PORT}`);
+  console.log(`Server started and running at ${PORT}`);
 });

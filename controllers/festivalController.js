@@ -1,27 +1,14 @@
 const Festival = require('../models/Festival');
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
 
 exports.createFestival = async (req, res) => {
   try {
-    console.log('Uploaded file:', req.file);
-    console.log('Request body:', req.body);
-
     const { title, description, date, location } = req.body;
-
-    if (!description) {
-      return res.status(400).json({ error: 'Description is required' });
-    }
-
-    const parsedDate = new Date(date);
-    if (isNaN(parsedDate)) {
-      return res.status(400).json({ error: 'Invalid date format' });
-    }
-
     const newFestival = new Festival({
       title,
       description,
-      date: parsedDate,
+      date,
       location,
       image: req.file ? req.file.filename : null
     });
@@ -59,9 +46,6 @@ exports.getFestivalById = async (req, res) => {
 
 exports.updateFestival = async (req, res) => {
   try {
-    console.log('Uploaded file:', req.file);
-    console.log('Request body:', req.body);
-
     const { title, description, date, location } = req.body;
     const updateData = {
       title,
