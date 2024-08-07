@@ -63,7 +63,9 @@ const updateEvent = async (req, res) => {
     event.description = description;
     event.date = date;
     event.location = location;
+   if(image){
     event.image = image;
+   }
 
     const updatedEvent = await event.save();
     res.json(updatedEvent);
