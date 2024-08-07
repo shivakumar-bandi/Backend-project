@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config();  // Load environment variables early
 
 const express = require('express');
 const connectDB = require('./config/db');
@@ -9,6 +9,11 @@ const path = require('path');
 const articleRoutes = require('./routes/articleRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const festivalRoutes = require('./routes/festivalRoutes');
+
+console.log('AWS_ACCESS_KEY_ID:', process.env.AWS_ACCESS_KEY_ID);
+console.log('AWS_SECRET_ACCESS_KEY:', process.env.AWS_SECRET_ACCESS_KEY);
+console.log('AWS_REGION:', process.env.AWS_REGION);
+console.log('AWS_BUCKET_NAME:', process.env.AWS_BUCKET_NAME);
 
 connectDB();
 
@@ -33,7 +38,7 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).json({ message: 'Something broke!', error: err.message });
 });
 
 app.get('/test', (req, res) => {
