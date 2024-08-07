@@ -1,5 +1,4 @@
 // models/Event.js
-
 const mongoose = require('mongoose');
 
 const eventSchema = new mongoose.Schema({
@@ -20,8 +19,8 @@ const eventSchema = new mongoose.Schema({
     required: true
   },
   image: {
-    type: String,  // Assuming storing image URL for simplicity
-   
+    type: String,
+    required: false
   }
 });
 
