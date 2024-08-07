@@ -3,10 +3,10 @@ const connectDB = require('./config/db');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path'); 
 const articleRoutes = require('./routes/articleRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const festivalRoutes = require('./routes/festivalRoutes');
-const path = require('path'); 
 
 dotenv.config();
 connectDB();
@@ -17,6 +17,8 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
+// Ensure bodyParser is configured to handle form data
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const uploadsPath = path.join(__dirname, 'uploads');
 app.use('/uploads', express.static(uploadsPath));
@@ -34,11 +36,9 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
-
 app.get('/test', (req, res) => {
   res.send('Server is working!');
 });
-
 
 app.use((req, res, next) => {
   res.status(404).send('Cannot GET ' + req.originalUrl);

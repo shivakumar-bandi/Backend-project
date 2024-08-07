@@ -4,6 +4,8 @@ const createArticle = async (req, res) => {
   const { title, content, author } = req.body;
   const image = req.file ? `/uploads/${req.file.filename}` : '';
 
+  console.log('Image path:', image);  // Log the image path
+
   try {
     const article = new Article({
       title,
