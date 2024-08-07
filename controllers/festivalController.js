@@ -1,88 +1,98 @@
 const Festival = require('../models/Festival');
-const path = require('path');
-const fs = require('fs');
 
-exports.createFestival = async (req, res) => {
+const createFestival = async (req, res) => {
+  const { title, description, date, location } = req.body;
+  const image = req.file ? `/uploads/${req.file.filename}` : '';
+
   try {
-    const { title, description, date, location } = req.body;
-    const newFestival = new Festival({
+    const festival = new Festival({
       title,
       description,
       date,
       location,
-      image: req.file ? req.file.filename : null
+      image
     });
 
-    await newFestival.save();
-    res.status(201).json(newFestival);
-  } catch (err) {
-    console.error('Error creating festival:', err);
-    res.status(500).json({ error: err.message });
+    const createdFestival = await festival.save();
+    res.status(201).json(createdFestival);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
 
-exports.getAllFestivals = async (req, res) => {
+const getAllFestivals = async (req, res) => {
   try {
     const festivals = await Festival.find();
     res.json(festivals);
-  } catch (err) {
-    console.error('Error fetching festivals:', err);
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
 
-exports.getFestivalById = async (req, res) => {
+const getFestivalById = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const festival = await Festival.findById(req.params.id);
+    const festival = await Festival.findById(id);
+
     if (!festival) {
-      return res.status(404).json({ error: 'Festival not found' });
+      res.status(404).json({ message: 'Festival not found' });
+      return;
     }
+
     res.json(festival);
-  } catch (err) {
-    console.error('Error fetching festival:', err);
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
 
-exports.updateFestival = async (req, res) => {
+const updateFestival = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, date, location } = req.body;
+  const image = req.file ? `/uploads/${req.file.filename}` : req.body.image;
+
   try {
-    const { title, description, date, location } = req.body;
-    const updateData = {
-      title,
-      description,
-      date,
-      location
-    };
+    const festival = await Festival.findById(id);
 
-    if (req.file) {
-      updateData.image = req.file.filename;
+    if (!festival) {
+      res.status(404).json({ message: 'Festival not found' });
+      return;
     }
 
-    const updatedFestival = await Festival.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true }
-    );
+    festival.title = title;
+    festival.description = description;
+    festival.date = date;
+    festival.location = location;
+    festival.image = image;
 
-    if (!updatedFestival) {
-      return res.status(404).json({ error: 'Festival not found' });
-    }
+    const updatedFestival = await festival.save();
     res.json(updatedFestival);
-  } catch (err) {
-    console.error('Error updating festival:', err);
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
 
-exports.deleteFestival = async (req, res) => {
+const deleteFestival = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const deletedFestival = await Festival.findByIdAndDelete(req.params.id);
-    if (!deletedFestival) {
-      return res.status(404).json({ error: 'Festival not found' });
+    const result = await Festival.deleteOne({ _id: id });
+
+    if (result.deletedCount === 0) {
+      res.status(404).json({ message: 'Festival not found' });
+      return;
     }
-    res.json({ message: 'Festival deleted successfully' });
-  } catch (err) {
-    console.error('Error deleting festival:', err);
-    res.status(500).json({ error: err.message });
+
+    res.json({ message: 'Festival removed' });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
+};
+
+module.exports = {
+  createFestival,
+  getAllFestivals,
+  getFestivalById,
+  updateFestival,
+  deleteFestival
 };

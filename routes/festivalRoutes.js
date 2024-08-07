@@ -1,9 +1,18 @@
-// routes/festivalRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const festivalController = require('../controllers/festivalController');
-const upload = require('../middleware/uploadMiddleware');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
 
 router.post('/', upload.single('image'), festivalController.createFestival);
 router.get('/', festivalController.getAllFestivals);

@@ -1,72 +1,98 @@
 const Event = require('../models/Event');
-const fs = require('fs');
-const path = require('path');
 
-exports.createEvent = async (req, res) => {
+const createEvent = async (req, res) => {
+  const { title, description, date, location } = req.body;
+  const image = req.file ? `/uploads/${req.file.filename}` : '';
+
   try {
-    console.log('Uploaded file:', req.file);
-    console.log(req.body); 
-    const { title, description, date, location } = req.body;
-    const image = req.file ? req.file.filename : ''; 
-    const newEvent = new Event({ title, description, date, location, image });
+    const event = new Event({
+      title,
+      description,
+      date,
+      location,
+      image
+    });
 
-    await newEvent.save();
-    res.status(201).json(newEvent);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const createdEvent = await event.save();
+    res.status(201).json(createdEvent);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
 
-exports.getAllEvents = async (req, res) => {
+const getAllEvents = async (req, res) => {
   try {
     const events = await Event.find();
-    res.status(200).json(events);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.json(events);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
 
-exports.getEventById = async (req, res) => {
+const getEventById = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findById(id);
+
     if (!event) {
-      return res.status(404).json({ error: 'Event not found' });
+      res.status(404).json({ message: 'Event not found' });
+      return;
     }
-    res.status(200).json(event);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    res.json(event);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
 
-exports.updateEvent = async (req, res) => {
+const updateEvent = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, date, location } = req.body;
+  const image = req.file ? `/uploads/${req.file.filename}` : req.body.image;
+
   try {
-    const { title, description, date, location } = req.body;
-    const image = req.file ? req.file.filename : req.body.image;
+    const event = await Event.findById(id);
 
-    const updatedEvent = await Event.findByIdAndUpdate(
-      req.params.id,
-      { title, description, date, location, image },
-      { new: true }
-    );
-
-    if (!updatedEvent) {
-      return res.status(404).json({ error: 'Event not found' });
+    if (!event) {
+      res.status(404).json({ message: 'Event not found' });
+      return;
     }
 
-    res.status(200).json(updatedEvent);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    event.title = title;
+    event.description = description;
+    event.date = date;
+    event.location = location;
+    event.image = image;
+
+    const updatedEvent = await event.save();
+    res.json(updatedEvent);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
 
-exports.deleteEvent = async (req, res) => {
+const deleteEvent = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const deletedEvent = await Event.findByIdAndDelete(req.params.id);
-    if (!deletedEvent) {
-      return res.status(404).json({ error: 'Event not found' });
+    const result = await Event.deleteOne({ _id: id });
+
+    if (result.deletedCount === 0) {
+      res.status(404).json({ message: 'Event not found' });
+      return;
     }
-    res.status(204).json({ message: 'Event deleted successfully' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    res.json({ message: 'Event removed' });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
+};
+
+module.exports = {
+  createEvent,
+  getAllEvents,
+  getEventById,
+  updateEvent,
+  deleteEvent
 };
