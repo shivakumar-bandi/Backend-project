@@ -1,9 +1,7 @@
-// routes/festivalRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const festivalController = require('../controllers/festivalController');
-const upload = require('../middleware/uploadMiddleware');
+const { upload } = require('../middleware/uploadMiddleware'); // Destructure import
 
 router.post('/', upload.single('image'), festivalController.createFestival);
 router.get('/', festivalController.getAllFestivals);

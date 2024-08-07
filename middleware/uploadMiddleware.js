@@ -1,7 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const fs = require('fs');
 
 // Log environment variables
 console.log('AWS_ACCESS_KEY_ID:', process.env.AWS_ACCESS_KEY_ID);
