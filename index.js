@@ -7,6 +7,7 @@ const cors = require('cors');
 const articleRoutes = require('./routes/articleRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const festivalRoutes = require('./routes/festivalRoutes');
+const userRoutes =require('./routes/userRoutes')
 const path = require('path'); 
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 const uploadsPath = path.join(__dirname, 'uploads');
 app.use('/uploads', express.static(uploadsPath));
 
+app.use('/user', userRoutes)
 app.use('/api/articles', articleRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/festivals', festivalRoutes);
