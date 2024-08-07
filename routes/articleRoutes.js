@@ -1,5 +1,6 @@
 const express = require('express');
-const { upload, uploadToS3 } = require('../middleware/uploadMiddleware'); // Use destructuring for named exports
+const multer = require('multer');
+const path = require('path');
 const {
   createArticle,
   getArticles,
@@ -10,10 +11,21 @@ const {
 
 const router = express.Router();
 
-router.post('/', upload.single('image'), uploadToS3, createArticle); // Use uploadToS3 if you need to upload to S3
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
+
+router.post('/', upload.single('image'), createArticle);
 router.get('/', getArticles);
 router.get('/:id', getArticleById);
-router.put('/:id', upload.single('image'), uploadToS3, updateArticle); // Use uploadToS3 if you need to upload to S3
+router.put('/:id', upload.single('image'), updateArticle);
 router.delete('/:id', deleteArticle);
 
 module.exports = router;

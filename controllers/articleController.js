@@ -2,9 +2,7 @@ const Article = require('../models/Article');
 
 const createArticle = async (req, res) => {
   const { title, content, author } = req.body;
-  const image = req.file ? req.file.location : ''; // S3 URL
-
-  console.log('Image URL:', image);  // Log the image URL
+  const image = req.file ? `/uploads/${req.file.filename}` : '';
 
   try {
     const article = new Article({
@@ -50,7 +48,7 @@ const getArticleById = async (req, res) => {
 const updateArticle = async (req, res) => {
   const { id } = req.params;
   const { title, content, author } = req.body;
-  const image = req.file ? req.file.location : ''; // S3 URL
+  const image = req.file ? `/uploads/${req.file.filename}` : '';
 
   try {
     const article = await Article.findById(id);

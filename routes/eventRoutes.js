@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const eventController = require('../controllers/eventController');
-const { upload } = require('../middleware/uploadMiddleware'); // Destructure import
+const upload = require('../middleware/uploadMiddleware');
 
 router.post('/', upload.single('image'), eventController.createEvent);
 router.get('/', eventController.getAllEvents);
