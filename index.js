@@ -11,6 +11,7 @@ const festivalRoutes = require('./routes/festivalRoutes');
 dotenv.config();
 connectDB();
 
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
