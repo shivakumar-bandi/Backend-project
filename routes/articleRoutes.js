@@ -1,26 +1,8 @@
 const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const {
-  createArticle,
-  getArticles,
-  getArticleById,
-  updateArticle,
-  deleteArticle,
-} = require('../controllers/articleController');
+const { createArticle, getArticles, getArticleById, updateArticle, deleteArticle } = require('../controllers/articleController');
 
 const router = express.Router();
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
-
-const upload = multer({ storage });
+const upload = require('../middleware/uploadMiddleware'); // Import the upload middleware correctly
 
 router.post('/', upload.single('image'), createArticle);
 router.get('/', getArticles);
