@@ -13,7 +13,7 @@ const s3 = new AWS.S3({
 // Define storage for multer to use S3
 const storage = multerS3({
   s3: s3,
-  bucket: process.env.AWS_BUCKET_NAME,
+  bucket: process.env.AWS_BUCKET_NAME, // Use bucket name from .env
   acl: 'public-read',
   metadata: function (req, file, cb) {
     cb(null, { fieldName: file.fieldname });

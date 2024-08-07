@@ -1,6 +1,8 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const express = require('express');
 const connectDB = require('./config/db');
-const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
@@ -8,9 +10,7 @@ const articleRoutes = require('./routes/articleRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const festivalRoutes = require('./routes/festivalRoutes');
 
-dotenv.config();
 connectDB();
-
 
 const app = express();
 const PORT = process.env.PORT || 5000;
