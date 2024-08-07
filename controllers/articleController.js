@@ -76,19 +76,19 @@ const deleteArticle = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const article = await Article.findById(id);
+    const result = await Article.deleteOne({ _id: id });
 
-    if (!article) {
+    if (result.deletedCount === 0) {
       res.status(404).json({ message: 'Article not found' });
       return;
     }
 
-    await article.remove();
     res.json({ message: 'Article removed' });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
 
 module.exports = {
   createArticle,
