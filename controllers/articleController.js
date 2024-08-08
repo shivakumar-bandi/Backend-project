@@ -2,7 +2,9 @@ const Article = require('../models/Article');
 
 const createArticle = async (req, res) => {
   const { title, content, author } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : '';
+  const image = req.file ? `${req.file.filename}` : '';
+
+  console.log('Creating article with image:', image); // Add this line
 
   try {
     const article = new Article({
@@ -48,7 +50,9 @@ const getArticleById = async (req, res) => {
 const updateArticle = async (req, res) => {
   const { id } = req.params;
   const { title, content, author } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : '';
+  const image = req.file ? `${req.file.filename}` : '';
+
+  console.log('Updating article with image:', image); // Add this line
 
   try {
     const article = await Article.findById(id);

@@ -2,7 +2,7 @@ const Event = require('../models/Event');
 
 const createEvent = async (req, res) => {
   const { title, description, date, location } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : '';
+  const image = req.file ? `${req.file.filename}` : '';
 
   try {
     const event = new Event({
@@ -49,7 +49,7 @@ const getEventById = async (req, res) => {
 const updateEvent = async (req, res) => {
   const { id } = req.params;
   const { title, description, date, location } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : req.body.image;
+  const image = req.file ? `${req.file.filename}` : req.body.image;
 
   try {
     const event = await Event.findById(id);
