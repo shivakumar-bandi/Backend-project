@@ -18,8 +18,10 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Security middleware
+// Trust the first proxy (like Render.com's proxy)
+app.set('trust proxy', 1);  // <-- Add this line
 
+// Security middleware
 app.use(xss());
 app.use(hpp());
 
