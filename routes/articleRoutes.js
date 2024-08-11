@@ -1,6 +1,12 @@
 // routes/articleRoutes.js
 const express = require('express');
-const { createArticle, getArticles, getArticleById, updateArticle, deleteArticle } = require('../controllers/articleController');
+const {
+  createArticle,
+  getArticles,
+  getArticleById,
+  updateArticle,
+  deleteArticle
+} = require('../controllers/articleController');
 const upload = require('../middleware/uploadMiddleware'); // Ensure this path is correct
 
 const router = express.Router();

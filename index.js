@@ -1,3 +1,4 @@
+// index.js
 const express = require('express');
 const connectDB = require('./config/db');
 const dotenv = require('dotenv');
@@ -38,7 +39,7 @@ app.use(cors());
 // Body parser
 app.use(express.json());
 
-// Static folder
+// Static folder to serve images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
